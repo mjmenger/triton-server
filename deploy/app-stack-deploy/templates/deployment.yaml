@@ -61,6 +61,11 @@ spec:
         volumeMounts:
         - name: models
           mountPath: /models
+        env:
+        - name: LOAD_INCEPTION_GRAPHDEF
+          value: "1"
+        - name: LOAD_DENSENET_ONNX
+          value: "1"
       - name: check-models
         image: ghcr.io/mjmenger/check-models
         volumeMounts:
@@ -71,6 +76,11 @@ spec:
             memory: "128Mi"
             cpu: "500m"                 
       containers:
+        - name: nginx
+          image: nginx
+          volumeMounts:
+            - mountPath: /models
+              name: models
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.imageName }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
